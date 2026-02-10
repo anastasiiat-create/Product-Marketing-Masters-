@@ -21,11 +21,9 @@
       --accent:#00bfe6;
       --accent2:#ff2bd6;
       --accent3:#ffd400;
-      --good:#19c37d;
-      --danger:#ff3b3b;
 
       --shadow: 0 18px 55px rgba(10,16,40,.12);
-      --radius: 20px;
+      --radius: 22px;
 
       --glass: rgba(255,255,255,.78);
       --glass2: rgba(255,255,255,.62);
@@ -47,15 +45,16 @@
       overflow-x:hidden;
     }
 
+    /* ✅ More "phone full-screen" layout */
     .app{
       min-height:100vh;
       display:flex;
       flex-direction:column;
-      padding: 14px 14px 18px;
-      padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      padding: 12px 12px 12px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
       max-width: 520px;
       margin: 0 auto;
-      gap: 12px;
+      gap: 10px;
     }
 
     header{
@@ -63,15 +62,16 @@
       align-items:flex-start;
       justify-content:space-between;
       gap:12px;
+      flex: 0 0 auto;
     }
     .brand{display:flex;flex-direction:column;gap:2px;}
-    .brand p{margin:0;font-size:12px;color:var(--muted);}
+    .brand p{margin:0;font-size:13px;color:var(--muted);}
 
     .chip{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: 999px;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
       border: 1px solid rgba(11,16,32,.12);
@@ -88,8 +88,17 @@
       box-shadow: 0 10px 18px rgba(10,16,40,.12);
     }
 
-    .view{display:none; animation: fadeIn .18s ease-out}
-    .view.active{display:block}
+    /* ✅ views fill remaining height */
+    .view{
+      display:none;
+      flex: 1 1 auto;
+      min-height: 0;
+      animation: fadeIn .18s ease-out;
+    }
+    .view.active{
+      display:flex;
+      flex-direction:column;
+    }
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
     .card{
@@ -106,36 +115,42 @@
       justify-content:space-between;
       margin: 2px 2px 10px;
       gap:12px;
+      flex: 0 0 auto;
     }
-    .section-title h2{margin:0;font-size:16px;letter-spacing:.2px;text-shadow:none;}
+    .section-title h2{margin:0;font-size:17px;letter-spacing:.2px;text-shadow:none;}
     .section-title span{font-size:12px;color:var(--muted);}
 
+    /* HOME */
     .grid{
       display:flex;
       flex-direction:column;
       gap: 10px;
+      flex: 1 1 auto;     /* ✅ fill height */
+      min-height: 0;
     }
     .tile{
-      padding: 12px 14px;
+      padding: 14px 14px;
       display:flex;
       align-items:center;
-      gap: 12px;
-      min-height: 88px;
+      gap: 14px;
       cursor:pointer;
       user-select:none;
       position:relative;
       overflow:hidden;
       transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+      flex: 1 1 0;        /* ✅ tiles stretch to fill */
+      min-height: 102px;  /* ✅ bigger on phone */
     }
     .tile:active{transform: scale(.99)}
     .tile:hover{border-color: rgba(0,191,230,.35); filter: brightness(1.02)}
-    .tile .label{display:flex;flex-direction:column;gap:4px;z-index:2; flex:1;}
-    .tile .label b{font-size:15px}
-    .tile .label small{color:var(--muted); font-size:12px}
+    .tile .label{display:flex;flex-direction:column;gap:6px;z-index:2; flex:1;}
+    .tile .label b{font-size:16px}
+    .tile .label small{color:var(--muted); font-size:13px}
 
+    /* ✅ Bigger icon container + icon */
     .iconWrap{
-      width:54px;height:54px;
-      border-radius: 16px;
+      width:66px;height:66px;
+      border-radius: 18px;
       display:grid;
       place-items:center;
       z-index:2;
@@ -144,11 +159,8 @@
       background: linear-gradient(135deg, rgba(0,191,230,.18), rgba(255,43,214,.12));
       flex:0 0 auto;
     }
-
-    /* Bigger + consistent icons */
     .iconWrap svg{
-      width:40px;
-      height:40px;
+      width:48px;height:48px;
       filter: drop-shadow(0 10px 18px rgba(10,16,40,.10));
     }
     .tile svg{opacity:1; filter: drop-shadow(0 10px 18px rgba(10,16,40,.10))}
@@ -156,7 +168,7 @@
     .tile .bgGlow{
       position:absolute;
       inset:-60px -60px auto auto;
-      width:220px;height:220px;
+      width:240px;height:240px;
       background:
         radial-gradient(circle at 30% 30%, rgba(0,191,230,.30), transparent 60%),
         radial-gradient(circle at 70% 60%, rgba(255,43,214,.24), transparent 60%),
@@ -192,27 +204,29 @@
     }
 
     .tile .rightChev{
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       opacity: .9;
       z-index:2;
       filter: drop-shadow(0 10px 18px rgba(10,16,40,.10));
       flex:0 0 auto;
     }
 
+    /* Clothing packages */
     .toolbar{
       display:flex;
       gap:10px;
       align-items:center;
       justify-content:space-between;
       margin-bottom:10px;
+      flex: 0 0 auto;
     }
     .btn{
       border:0;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
       color: var(--text);
       border: 1px solid rgba(11,16,32,.12);
-      padding: 10px 12px;
+      padding: 11px 12px;
       border-radius: 14px;
       font-size: 13px;
       cursor:pointer;
@@ -220,6 +234,7 @@
       transition: transform .12s ease, filter .12s ease, border-color .12s ease;
       box-shadow: 0 12px 24px rgba(10,16,40,.10);
       backdrop-filter: blur(10px);
+      white-space: nowrap;
     }
     .btn:active{transform: scale(.99)}
     .btn:hover{filter: brightness(1.02); border-color: rgba(0,191,230,.28)}
@@ -231,12 +246,19 @@
     }
     .btn.primary:disabled{opacity:.55;cursor:not-allowed; filter:saturate(.8);}
 
-    .packages{display:flex;flex-direction:column;gap: 12px;}
+    /* ✅ Packages also fill screen height */
+    .packages{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
     .package{
       display:flex;
       align-items:center;
-      gap: 12px;
-      padding: 12px;
+      gap: 14px;
+      padding: 14px;
       cursor:pointer;
       user-select:none;
       transition: transform .12s ease, border-color .12s ease, filter .12s ease;
@@ -246,47 +268,60 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
       position:relative;
+
+      flex: 1 1 0;       /* ✅ stretch */
+      min-height: 118px; /* ✅ bigger to reduce empty bottom */
     }
     .package:active{transform: scale(.99)}
     .package:hover{border-color: rgba(0,191,230,.28); filter: brightness(1.02)}
 
+    /* ✅ Bigger bag images */
     .package img{
-      width: 96px;
-      height: 74px;
+      width: 122px;
+      height: 92px;
       object-fit: contain;
-      border-radius: 14px;
+      border-radius: 16px;
       border: 1px solid rgba(11,16,32,.14);
       background: rgba(255,255,255,.92);
       box-shadow: 0 14px 26px rgba(10,16,40,.18);
       padding: 8px;
       filter: contrast(1.08) saturate(1.05);
+      flex: 0 0 auto;
     }
 
-    .pkgMeta{display:flex;flex-direction:column;gap: 4px;flex:1;}
-    .pkgMeta b{font-size:14px}
-    .pkgMeta small{color:var(--muted); font-size:12px}
+    .pkgMeta{display:flex;flex-direction:column;gap: 6px;flex:1;}
+    .pkgMeta b{font-size:16px}
+    .pkgMeta small{color:var(--muted); font-size:13px}
 
     .cartPill{
       font-weight: 900;
-      font-size: 12px;
-      padding: 8px 10px;
+      font-size: 13px;
+      padding: 10px 12px;
       border-radius: 999px;
       border: 1px solid rgba(11,16,32,.12);
       background: rgba(255,255,255,.78);
       box-shadow: 0 10px 18px rgba(10,16,40,.08);
       flex:0 0 auto;
-      min-width: 46px;
+      min-width: 56px;
       text-align:center;
     }
 
-    .formCard{padding: 14px;display:flex;flex-direction:column;gap: 12px;}
+    /* Form */
+    .formCard{
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
 
     .chosenRow{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 12px;
-      padding: 10px 12px;
+      padding: 12px 12px;
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.74));
       border: 1px solid rgba(11,16,32,.12);
@@ -294,15 +329,24 @@
       backdrop-filter: blur(10px);
     }
     .chosenRow .text{display:flex;flex-direction:column;gap: 2px;}
-    .chosenRow .text b{font-size:14px}
+    .chosenRow .text b{font-size:15px}
     .chosenRow .text small{color:var(--muted); font-size:12px}
 
-    .cartList{display:flex;flex-direction:column;gap:10px;}
+    /* Cart list scroll nicely if needed */
+    .cartList{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:auto;
+      min-height: 0;
+      padding-right: 2px;
+    }
+
     .cartItem{
       display:flex;
       align-items:center;
       gap:12px;
-      padding: 10px;
+      padding: 12px;
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.74));
       border: 1px solid rgba(11,16,32,.12);
@@ -310,8 +354,8 @@
       backdrop-filter: blur(10px);
     }
     .cartItem img{
-      width: 66px;
-      height: 52px;
+      width: 74px;
+      height: 58px;
       object-fit: contain;
       border-radius: 12px;
       border: 1px solid rgba(11,16,32,.14);
@@ -322,18 +366,19 @@
       flex:0 0 auto;
     }
     .cartItem .meta{display:flex;flex-direction:column;gap:2px;flex:1;}
-    .cartItem .meta b{font-size:13px}
+    .cartItem .meta b{font-size:14px}
     .cartItem .meta small{font-size:12px;color:var(--muted)}
     .cartItem .qtyTag{
       font-weight: 900;
       font-size: 12px;
-      padding: 8px 10px;
+      padding: 9px 11px;
       border-radius: 999px;
       border: 1px solid rgba(11,16,32,.12);
       background: rgba(255,255,255,.78);
       box-shadow: 0 10px 18px rgba(10,16,40,.08);
       flex:0 0 auto;
     }
+
     .emptyCart{
       padding: 12px;
       border-radius: 16px;
@@ -350,10 +395,11 @@
       display:flex;
       flex-direction:column;
       gap: 6px;
+      flex: 0 0 auto;
     }
     input{
       width:100%;
-      padding: 12px 12px;
+      padding: 13px 12px;
       border-radius: 16px;
       border: 1px solid rgba(11,16,32,.12);
       background:
@@ -362,7 +408,7 @@
         rgba(255,255,255,.92);
       color: var(--text);
       outline:none;
-      font-size: 14px;
+      font-size: 15px;
       box-shadow: 0 14px 22px rgba(10,16,40,.10);
       backdrop-filter: blur(10px);
     }
@@ -372,6 +418,7 @@
       box-shadow: 0 0 0 4px rgba(0,191,230,.14), 0 16px 26px rgba(10,16,40,.10);
     }
 
+    /* Animation overlays */
     .overlay{
       position:fixed;
       inset:0;
@@ -393,7 +440,7 @@
     .road{
       position:relative;
       width:min(520px, 92vw);
-      height: 130px;
+      height: 140px;
       border-radius: 24px;
       background:
         linear-gradient(135deg, rgba(0,191,230,.12), rgba(255,43,214,.10)),
@@ -424,11 +471,11 @@
       left:-110px;
       top: 50%;
       transform: translateY(-50%);
-      width: 96px;
-      height: 50px;
+      width: 106px;
+      height: 56px;
       filter: drop-shadow(0 16px 26px rgba(10,16,40,.22));
     }
-    /* ✅ slower car */
+    /* slower */
     .car.run{animation: drive 2.2s ease-in-out forwards;}
     @keyframes drive{
       0%{ left:-120px; transform: translateY(-50%) translateX(0) }
@@ -445,16 +492,16 @@
     }
 
     .footerHint{
-      margin-top: 10px;
+      margin-top: 6px;
       color: rgba(11,16,32,.70);
       font-size: 12px;
       opacity:.95;
       text-align:center;
-      padding-top: 6px;
+      padding-top: 4px;
       text-shadow: none;
+      flex: 0 0 auto;
     }
 
-    /* ✅ Fly-to-cart animation element */
     .flyImg{
       position:fixed;
       z-index: 2000;
@@ -485,11 +532,10 @@
       </div>
 
       <div class="grid">
-        <!-- 1) Undercoat -->
+        <!-- Undercoat -->
         <div class="tile card tech" id="tile-tech" role="button" aria-label="Open undercoat">
           <div class="bgGlow"></div>
           <div class="iconWrap" aria-hidden="true">
-            <!-- ✅ Pants SVG (back) -->
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M8 3h8l1 8-2 10h-4l-1-7-1 7H5l2-10-1-8Z"
                     stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
@@ -506,7 +552,7 @@
           </svg>
         </div>
 
-        <!-- 2) Shoes -->
+        <!-- Shoes -->
         <div class="tile card shoes" id="tile-shoes" role="button" aria-label="Open shoes">
           <div class="bgGlow"></div>
           <div class="iconWrap" aria-hidden="true">
@@ -524,7 +570,7 @@
           </svg>
         </div>
 
-        <!-- 3) Outerwear -->
+        <!-- Outerwear -->
         <div class="tile card clothing" id="tile-clothing" role="button" aria-label="Open outerwear">
           <div class="bgGlow"></div>
           <div class="iconWrap" aria-hidden="true">
@@ -542,7 +588,7 @@
           </svg>
         </div>
 
-        <!-- 4) Jewelry -->
+        <!-- Jewelry -->
         <div class="tile card jewelry" id="tile-jewelry" role="button" aria-label="Open jewelry">
           <div class="bgGlow"></div>
           <div class="iconWrap" aria-hidden="true">
@@ -563,7 +609,7 @@
       </div>
     </section>
 
-    <!-- CLOTHING (PAGE 2) -->
+    <!-- BAGS -->
     <section id="view-clothing" class="view">
       <div class="toolbar">
         <button class="btn" id="backToHome">← Back</button>
@@ -577,7 +623,7 @@
       </div>
 
       <div class="packages">
-        <!-- ✅ images swapped 1st <-> 3rd, KG/text unchanged -->
+        <!-- images swapped 1st <-> 3rd, KG/text unchanged -->
         <div class="package" data-kg="5" data-img="https://i.postimg.cc/W3qY8Crf/Chat-GPT-Image-Jan-14-2026-10-04-36-AM-removebg-preview.png" role="button" aria-label="Add 5 kg">
           <img src="https://i.postimg.cc/W3qY8Crf/Chat-GPT-Image-Jan-14-2026-10-04-36-AM-removebg-preview.png" alt="Clothing bale 5 kg" />
           <div class="pkgMeta">
@@ -609,7 +655,7 @@
       <p class="footerHint">Tap bags to add to cart, then open Cart.</p>
     </section>
 
-    <!-- FORM (PAGE 3) -->
+    <!-- FORM -->
     <section id="view-form" class="view">
       <div class="toolbar">
         <button class="btn" id="backToClothing">← Back</button>
@@ -626,7 +672,6 @@
 
         <div id="cartList" class="cartList"></div>
 
-        <!-- ✅ Phone instead of name/email -->
         <label>
           Phone number
           <input id="inpPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+380 00 000 0000" />
@@ -667,7 +712,6 @@
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
 
-    // Outerwear -> page 2
     document.getElementById('tile-clothing').addEventListener('click', () => showView('clothing'));
 
     function comingSoon(){ alert('Coming soon 🙂'); }
@@ -699,19 +743,16 @@
     }
 
     function updateCartUI(){
-      // package pills
       document.querySelectorAll('[data-pill]').forEach(p => {
         const kg = Number(p.dataset.pill);
         p.textContent = `x${getQty(kg)}`;
       });
 
-      // checkout count
       let totalBags = 0;
       for(const { qty } of cart.values()) totalBags += qty;
       btnCheckout.textContent = `Cart (${totalBags}) →`;
       btnCheckout.disabled = totalBags === 0;
 
-      // keep form view in sync
       if(views.form.classList.contains('active')) renderCart();
     }
 
@@ -767,7 +808,7 @@
       cartSummary.textContent = `${totalBags} bag(s) • ${totalKg} kg total`;
     }
 
-    // ✅ Fly to cart animation
+    // Fly-to-cart
     function flyToCart(fromImgEl){
       const btn = btnCheckout;
       const r1 = fromImgEl.getBoundingClientRect();
@@ -796,7 +837,6 @@
       fly.addEventListener('transitionend', () => fly.remove(), { once:true });
     }
 
-    // Tap package -> add to cart (+ fly)
     document.querySelectorAll('.package').forEach(pkg => {
       pkg.addEventListener('click', () => {
         const kg = Number(pkg.dataset.kg);
@@ -810,7 +850,6 @@
       });
     });
 
-    // Checkout -> form
     btnCheckout.addEventListener('click', () => {
       showView('form');
       renderCart();
@@ -833,15 +872,12 @@
 
       const onEnd = () => {
         car.removeEventListener('animationend', onEnd);
-
         animOverlay.classList.remove('show');
         animOverlay.setAttribute('aria-hidden', 'true');
 
-        // clear form + cart
         inpPhone.value = '';
         cart.clear();
         updateCartUI();
-
         showView('home');
       };
 
@@ -850,14 +886,12 @@
 
     btnInsights.addEventListener('click', () => {
       btnInsights.disabled = true;
-
       setTimeout(() => {
         runAnimation();
         btnInsights.disabled = false;
       }, 150);
     });
 
-    // Init
     updateCartUI();
   </script>
 </body>
