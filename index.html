@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title></title>
+
+  <!-- Preload your bag images -->
+  <link rel="preload" as="image" href="https://i.postimg.cc/qRNSYzfk/Chat-GPT-Image-Jan-14-2026-10-04-21-AM-removebg-preview.png">
+  <link rel="preload" as="image" href="https://i.postimg.cc/fRMFsHnW/Pakunki-odagu-na-foni-gradientu-removebg-preview.png">
+  <link rel="preload" as="image" href="https://i.postimg.cc/W3qY8Crf/Chat-GPT-Image-Jan-14-2026-10-04-36-AM-removebg-preview.png">
+
+  <style>
+    :root{
+      --bg1:#f6f8ff;
+      --bg2:#eaf2ff;
+
+      --text:#0b1020;
+      --muted: rgba(11,16,32,.64);
+
+      --accent:#00bfe6;
+      --accent2:#ff2bd6;
+      --accent3:#ffd400;
+      --good:#19c37d;
+      --danger:#ff3b3b;
+
+      --shadow: 0 18px 55px rgba(10,16,40,.12);
+      --radius: 20px;
+
+      --glass: rgba(255,255,255,.78);
+      --glass2: rgba(255,255,255,.62);
+      --border: rgba(11,16,32,.12);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(900px 650px at 10% 0%, rgba(255,43,214,.18), transparent 60%),
+        radial-gradient(900px 650px at 90% 10%, rgba(0,191,230,.18), transparent 60%),
+        radial-gradient(900px 650px at 55% 110%, rgba(255,212,0,.16), transparent 60%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      -webkit-tap-highlight-color: transparent;
+      overflow-x:hidden;
+    }
+
+    .app{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      padding: 14px 14px 18px;
+      padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      max-width: 520px;
+      margin: 0 auto;
+      gap: 12px;
+    }
+
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{display:flex;flex-direction:column;gap:2px;}
+    .brand p{margin:0;font-size:12px;color:var(--muted);}
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
+      border: 1px solid rgba(11,16,32,.12);
+      box-shadow: 0 12px 24px rgba(10,16,40,.10);
+      backdrop-filter: blur(10px);
+      font-size: 12px;
+      color: rgba(11,16,32,.78);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(0,191,230,1), rgba(255,43,214,1));
+      box-shadow: 0 10px 18px rgba(10,16,40,.12);
+    }
+
+    .view{display:none; animation: fadeIn .18s ease-out}
+    .view.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+      border: 1px solid rgba(11,16,32,.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      margin: 2px 2px 10px;
+      gap:12px;
+    }
+    .section-title h2{margin:0;font-size:16px;letter-spacing:.2px;text-shadow:none;}
+    .section-title span{font-size:12px;color:var(--muted);}
+
+    .grid{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .tile{
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-height: 88px;
+      cursor:pointer;
+      user-select:none;
+      position:relative;
+      overflow:hidden;
+      transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+    }
+    .tile:active{transform: scale(.99)}
+    .tile:hover{border-color: rgba(0,191,230,.35); filter: brightness(1.02)}
+    .tile .label{display:flex;flex-direction:column;gap:4px;z-index:2; flex:1;}
+    .tile .label b{font-size:15px}
+    .tile .label small{color:var(--muted); font-size:12px}
+
+    .iconWrap{
+      width:54px;height:54px;
+      border-radius: 16px;
+      display:grid;
+      place-items:center;
+      z-index:2;
+      border: 1px solid rgba(11,16,32,.10);
+      box-shadow: 0 14px 30px rgba(10,16,40,.10);
+      background: linear-gradient(135deg, rgba(0,191,230,.18), rgba(255,43,214,.12));
+      flex:0 0 auto;
+    }
+
+    /* Bigger + consistent icons */
+    .iconWrap svg{
+      width:40px;
+      height:40px;
+      filter: drop-shadow(0 10px 18px rgba(10,16,40,.10));
+    }
+    .tile svg{opacity:1; filter: drop-shadow(0 10px 18px rgba(10,16,40,.10))}
+
+    .tile .bgGlow{
+      position:absolute;
+      inset:-60px -60px auto auto;
+      width:220px;height:220px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(0,191,230,.30), transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(255,43,214,.24), transparent 60%),
+        radial-gradient(circle at 40% 80%, rgba(255,212,0,.18), transparent 60%);
+      filter: blur(2px);
+      transform: rotate(12deg);
+      z-index:1;
+    }
+
+    .tile.clothing{
+      background:
+        radial-gradient(220px 180px at 20% 10%, rgba(0,191,230,.18), transparent 62%),
+        radial-gradient(220px 180px at 90% 90%, rgba(255,43,214,.14), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+    }
+    .tile.tech{
+      background:
+        radial-gradient(240px 200px at 10% 0%, rgba(255,212,0,.18), transparent 64%),
+        radial-gradient(240px 200px at 90% 90%, rgba(25,195,125,.12), transparent 64%),
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+    }
+    .tile.shoes{
+      background:
+        radial-gradient(240px 200px at 20% 10%, rgba(255,43,214,.18), transparent 64%),
+        radial-gradient(240px 200px at 90% 90%, rgba(0,191,230,.12), transparent 64%),
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+    }
+    .tile.jewelry{
+      background:
+        radial-gradient(240px 200px at 20% 10%, rgba(25,195,125,.14), transparent 64%),
+        radial-gradient(240px 200px at 90% 90%, rgba(255,212,0,.14), transparent 64%),
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+    }
+
+    .tile .rightChev{
+      width: 26px;
+      height: 26px;
+      opacity: .9;
+      z-index:2;
+      filter: drop-shadow(0 10px 18px rgba(10,16,40,.10));
+      flex:0 0 auto;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .btn{
+      border:0;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
+      color: var(--text);
+      border: 1px solid rgba(11,16,32,.12);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
+      box-shadow: 0 12px 24px rgba(10,16,40,.10);
+      backdrop-filter: blur(10px);
+    }
+    .btn:active{transform: scale(.99)}
+    .btn:hover{filter: brightness(1.02); border-color: rgba(0,191,230,.28)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(0,191,230,.95), rgba(255,43,214,.75));
+      border-color: rgba(11,16,32,.10);
+      color: #071025;
+      font-weight: 900;
+    }
+    .btn.primary:disabled{opacity:.55;cursor:not-allowed; filter:saturate(.8);}
+
+    .packages{display:flex;flex-direction:column;gap: 12px;}
+    .package{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      padding: 12px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, border-color .12s ease, filter .12s ease;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
+      border: 1px solid rgba(11,16,32,.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+    }
+    .package:active{transform: scale(.99)}
+    .package:hover{border-color: rgba(0,191,230,.28); filter: brightness(1.02)}
+
+    .package img{
+      width: 96px;
+      height: 74px;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid rgba(11,16,32,.14);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 14px 26px rgba(10,16,40,.18);
+      padding: 8px;
+      filter: contrast(1.08) saturate(1.05);
+    }
+
+    .pkgMeta{display:flex;flex-direction:column;gap: 4px;flex:1;}
+    .pkgMeta b{font-size:14px}
+    .pkgMeta small{color:var(--muted); font-size:12px}
+
+    .cartPill{
+      font-weight: 900;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(11,16,32,.12);
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 10px 18px rgba(10,16,40,.08);
+      flex:0 0 auto;
+      min-width: 46px;
+      text-align:center;
+    }
+
+    .formCard{padding: 14px;display:flex;flex-direction:column;gap: 12px;}
+
+    .chosenRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.74));
+      border: 1px solid rgba(11,16,32,.12);
+      box-shadow: 0 14px 24px rgba(10,16,40,.10);
+      backdrop-filter: blur(10px);
+    }
+    .chosenRow .text{display:flex;flex-direction:column;gap: 2px;}
+    .chosenRow .text b{font-size:14px}
+    .chosenRow .text small{color:var(--muted); font-size:12px}
+
+    .cartList{display:flex;flex-direction:column;gap:10px;}
+    .cartItem{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding: 10px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.74));
+      border: 1px solid rgba(11,16,32,.12);
+      box-shadow: 0 14px 22px rgba(10,16,40,.08);
+      backdrop-filter: blur(10px);
+    }
+    .cartItem img{
+      width: 66px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid rgba(11,16,32,.14);
+      box-shadow: 0 14px 20px rgba(10,16,40,.12);
+      background: rgba(255,255,255,.92);
+      padding: 6px;
+      filter: contrast(1.08) saturate(1.05);
+      flex:0 0 auto;
+    }
+    .cartItem .meta{display:flex;flex-direction:column;gap:2px;flex:1;}
+    .cartItem .meta b{font-size:13px}
+    .cartItem .meta small{font-size:12px;color:var(--muted)}
+    .cartItem .qtyTag{
+      font-weight: 900;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(11,16,32,.12);
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 10px 18px rgba(10,16,40,.08);
+      flex:0 0 auto;
+    }
+    .emptyCart{
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(11,16,32,.20);
+      background: rgba(255,255,255,.62);
+      color: rgba(11,16,32,.70);
+      font-size: 13px;
+      text-align:center;
+    }
+
+    label{
+      font-size: 12px;
+      color: rgba(11,16,32,.78);
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(11,16,32,.12);
+      background:
+        radial-gradient(220px 140px at 0% 0%, rgba(0,191,230,.10), transparent 60%),
+        radial-gradient(220px 140px at 100% 100%, rgba(255,43,214,.08), transparent 60%),
+        rgba(255,255,255,.92);
+      color: var(--text);
+      outline:none;
+      font-size: 14px;
+      box-shadow: 0 14px 22px rgba(10,16,40,.10);
+      backdrop-filter: blur(10px);
+    }
+    input::placeholder{color: rgba(11,16,32,.45)}
+    input:focus{
+      border-color: rgba(0,191,230,.55);
+      box-shadow: 0 0 0 4px rgba(0,191,230,.14), 0 16px 26px rgba(10,16,40,.10);
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 999;
+    }
+    .overlay.show{display:flex}
+
+    #animOverlay{
+      background:
+        radial-gradient(900px 700px at 20% 10%, rgba(255,43,214,.22), transparent 55%),
+        radial-gradient(900px 700px at 80% 20%, rgba(0,191,230,.20), transparent 55%),
+        rgba(11,16,32,.22);
+      backdrop-filter: blur(10px);
+    }
+
+    .road{
+      position:relative;
+      width:min(520px, 92vw);
+      height: 130px;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(0,191,230,.12), rgba(255,43,214,.10)),
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
+      border: 1px solid rgba(11,16,32,.12);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .road::before{
+      content:"";
+      position:absolute;
+      left:-40%;
+      top:58%;
+      width:180%;
+      height:3px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(255,212,0,.85) 0 18px,
+        transparent 18px 34px
+      );
+      opacity:.25;
+      transform: translateY(-50%);
+    }
+
+    .car{
+      position:absolute;
+      left:-110px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 96px;
+      height: 50px;
+      filter: drop-shadow(0 16px 26px rgba(10,16,40,.22));
+    }
+    /* ✅ slower car */
+    .car.run{animation: drive 2.2s ease-in-out forwards;}
+    @keyframes drive{
+      0%{ left:-120px; transform: translateY(-50%) translateX(0) }
+      60%{ transform: translateY(-52%) translateX(0) }
+      100%{ left: calc(100% + 120px); transform: translateY(-50%) translateX(0) }
+    }
+    .animText{
+      position:absolute;
+      left: 14px;
+      top: 12px;
+      font-size: 13px;
+      color: rgba(11,16,32,.82);
+      text-shadow: none;
+    }
+
+    .footerHint{
+      margin-top: 10px;
+      color: rgba(11,16,32,.70);
+      font-size: 12px;
+      opacity:.95;
+      text-align:center;
+      padding-top: 6px;
+      text-shadow: none;
+    }
+
+    /* ✅ Fly-to-cart animation element */
+    .flyImg{
+      position:fixed;
+      z-index: 2000;
+      border-radius: 14px;
+      pointer-events:none;
+      box-shadow: 0 18px 40px rgba(10,16,40,.22);
+      border: 1px solid rgba(11,16,32,.12);
+      background: rgba(255,255,255,.92);
+      padding: 6px;
+      will-change: transform, opacity;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <p>Mobile catalog</p>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section id="view-home" class="view active">
+      <div class="section-title">
+        <h2>Categories</h2>
+        <span>Tap to open</span>
+      </div>
+
+      <div class="grid">
+        <!-- 1) Undercoat -->
+        <div class="tile card tech" id="tile-tech" role="button" aria-label="Open undercoat">
+          <div class="bgGlow"></div>
+          <div class="iconWrap" aria-hidden="true">
+            <!-- ✅ Pants SVG (back) -->
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M8 3h8l1 8-2 10h-4l-1-7-1 7H5l2-10-1-8Z"
+                    stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M9 10h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M12 11v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="label">
+            <b>Undercoat</b>
+            <small>Coming soon</small>
+          </div>
+          <svg class="rightChev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- 2) Shoes -->
+        <div class="tile card shoes" id="tile-shoes" role="button" aria-label="Open shoes">
+          <div class="bgGlow"></div>
+          <div class="iconWrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 15c5 0 7-3 9-7 1 2 3 3 6 4 2 .8 3 1.6 3 3v3H3v-3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M7 15h1M10 15h1M13 15h1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="label">
+            <b>Shoes</b>
+            <small>Coming soon</small>
+          </div>
+          <svg class="rightChev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- 3) Outerwear -->
+        <div class="tile card clothing" id="tile-clothing" role="button" aria-label="Open outerwear">
+          <div class="bgGlow"></div>
+          <div class="iconWrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 4 7 6 4.5 5 3 8l4 2v10h10V10l4-2-1.5-3L17 6l-2-2H9Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M9 4c.6 1.2 1.6 2 3 2s2.4-.8 3-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="label">
+            <b>Outerwear</b>
+            <small>Bales & mixed lots</small>
+          </div>
+          <svg class="rightChev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- 4) Jewelry -->
+        <div class="tile card jewelry" id="tile-jewelry" role="button" aria-label="Open jewelry">
+          <div class="bgGlow"></div>
+          <div class="iconWrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 4h10l4 6-9 10L3 10l4-6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M9 10 12 4l3 6-3 10-3-10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="label">
+            <b>Jewelry</b>
+            <small>Coming soon</small>
+          </div>
+          <svg class="rightChev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOTHING (PAGE 2) -->
+    <section id="view-clothing" class="view">
+      <div class="toolbar">
+        <button class="btn" id="backToHome">← Back</button>
+        <div class="chip" title="Category"><span class="dot"></span> Clothing</div>
+        <button class="btn primary" id="btnCheckout" disabled>Cart (0) →</button>
+      </div>
+
+      <div class="section-title">
+        <h2>Select a bale</h2>
+        <span>Tap to add</span>
+      </div>
+
+      <div class="packages">
+        <!-- ✅ images swapped 1st <-> 3rd, KG/text unchanged -->
+        <div class="package" data-kg="5" data-img="https://i.postimg.cc/W3qY8Crf/Chat-GPT-Image-Jan-14-2026-10-04-36-AM-removebg-preview.png" role="button" aria-label="Add 5 kg">
+          <img src="https://i.postimg.cc/W3qY8Crf/Chat-GPT-Image-Jan-14-2026-10-04-36-AM-removebg-preview.png" alt="Clothing bale 5 kg" />
+          <div class="pkgMeta">
+            <b>5 kg bale</b>
+            <small>Compact pack</small>
+          </div>
+          <div class="cartPill" data-pill="5">x0</div>
+        </div>
+
+        <div class="package" data-kg="10" data-img="https://i.postimg.cc/fRMFsHnW/Pakunki-odagu-na-foni-gradientu-removebg-preview.png" role="button" aria-label="Add 10 kg">
+          <img src="https://i.postimg.cc/fRMFsHnW/Pakunki-odagu-na-foni-gradientu-removebg-preview.png" alt="Clothing bale 10 kg" />
+          <div class="pkgMeta">
+            <b>10 kg bale</b>
+            <small>Best value</small>
+          </div>
+          <div class="cartPill" data-pill="10">x0</div>
+        </div>
+
+        <div class="package" data-kg="15" data-img="https://i.postimg.cc/qRNSYzfk/Chat-GPT-Image-Jan-14-2026-10-04-21-AM-removebg-preview.png" role="button" aria-label="Add 15 kg">
+          <img src="https://i.postimg.cc/qRNSYzfk/Chat-GPT-Image-Jan-14-2026-10-04-21-AM-removebg-preview.png" alt="Clothing bale 15 kg" />
+          <div class="pkgMeta">
+            <b>15 kg bale</b>
+            <small>Max pack</small>
+          </div>
+          <div class="cartPill" data-pill="15">x0</div>
+        </div>
+      </div>
+
+      <p class="footerHint">Tap bags to add to cart, then open Cart.</p>
+    </section>
+
+    <!-- FORM (PAGE 3) -->
+    <section id="view-form" class="view">
+      <div class="toolbar">
+        <button class="btn" id="backToClothing">← Back</button>
+        <div class="chip"><span class="dot"></span> Form</div>
+      </div>
+
+      <div class="card formCard">
+        <div class="chosenRow" aria-live="polite">
+          <div class="text">
+            <b>Your cart</b>
+            <small id="cartSummary"></small>
+          </div>
+        </div>
+
+        <div id="cartList" class="cartList"></div>
+
+        <!-- ✅ Phone instead of name/email -->
+        <label>
+          Phone number
+          <input id="inpPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+380 00 000 0000" />
+        </label>
+
+        <button class="btn primary" id="btnInsights">Get insights</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- CAR ANIMATION OVERLAY -->
+  <div id="animOverlay" class="overlay" aria-hidden="true">
+    <div class="road" role="status" aria-label="Processing">
+      <div class="animText">Processing…</div>
+
+      <svg class="car" id="car" viewBox="0 0 120 60" fill="none" aria-hidden="true">
+        <path d="M18 36c3-12 10-20 24-20h30c10 0 18 5 24 14l8 0c4 0 6 2 6 6v8c0 3-2 5-5 5H18c-3 0-6-2-6-6v-3c0-3 2-6 6-6Z" fill="rgba(0,191,230,.95)"/>
+        <path d="M48 18h22c8 0 14 3 18 10H44c1-6 2-10 4-10Z" fill="rgba(7,16,37,.92)"/>
+        <circle cx="36" cy="48" r="8" fill="rgba(255,43,214,.95)"/>
+        <circle cx="88" cy="48" r="8" fill="rgba(255,43,214,.95)"/>
+        <circle cx="36" cy="48" r="3" fill="rgba(255,255,255,.95)"/>
+        <circle cx="88" cy="48" r="3" fill="rgba(255,255,255,.95)"/>
+        <path d="M18 36h90" stroke="rgba(255,212,0,.55)" stroke-width="2" />
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    const views = {
+      home: document.getElementById('view-home'),
+      clothing: document.getElementById('view-clothing'),
+      form: document.getElementById('view-form')
+    };
+
+    function showView(key){
+      Object.values(views).forEach(v => v.classList.remove('active'));
+      views[key].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+
+    // Outerwear -> page 2
+    document.getElementById('tile-clothing').addEventListener('click', () => showView('clothing'));
+
+    function comingSoon(){ alert('Coming soon 🙂'); }
+    document.getElementById('tile-tech').addEventListener('click', comingSoon);
+    document.getElementById('tile-shoes').addEventListener('click', comingSoon);
+    document.getElementById('tile-jewelry').addEventListener('click', comingSoon);
+
+    document.getElementById('backToHome').addEventListener('click', () => showView('home'));
+    document.getElementById('backToClothing').addEventListener('click', () => showView('clothing'));
+
+    // Cart
+    const cart = new Map(); // kg -> {qty, img, title, subtitle}
+
+    const btnCheckout = document.getElementById('btnCheckout');
+    const cartList = document.getElementById('cartList');
+    const cartSummary = document.getElementById('cartSummary');
+
+    function getQty(kg){ return cart.get(kg)?.qty || 0; }
+
+    function setQty(kg, img, title, subtitle, qty){
+      if(qty <= 0) cart.delete(kg);
+      else cart.set(kg, { qty, img, title, subtitle });
+      updateCartUI();
+    }
+
+    function addItem(kg, img, title, subtitle){
+      const next = getQty(kg) + 1;
+      setQty(kg, img, title, subtitle, next);
+    }
+
+    function updateCartUI(){
+      // package pills
+      document.querySelectorAll('[data-pill]').forEach(p => {
+        const kg = Number(p.dataset.pill);
+        p.textContent = `x${getQty(kg)}`;
+      });
+
+      // checkout count
+      let totalBags = 0;
+      for(const { qty } of cart.values()) totalBags += qty;
+      btnCheckout.textContent = `Cart (${totalBags}) →`;
+      btnCheckout.disabled = totalBags === 0;
+
+      // keep form view in sync
+      if(views.form.classList.contains('active')) renderCart();
+    }
+
+    function renderCart(){
+      cartList.innerHTML = '';
+      const entries = Array.from(cart.entries()).sort((a,b) => a[0] - b[0]);
+
+      if(entries.length === 0){
+        cartSummary.textContent = '';
+        const empty = document.createElement('div');
+        empty.className = 'emptyCart';
+        empty.textContent = 'Your cart is empty. Go back and add bags.';
+        cartList.appendChild(empty);
+        return;
+      }
+
+      let totalBags = 0;
+      let totalKg = 0;
+
+      for(const [kg, item] of entries){
+        totalBags += item.qty;
+        totalKg += kg * item.qty;
+
+        const row = document.createElement('div');
+        row.className = 'cartItem';
+
+        const img = document.createElement('img');
+        img.src = item.img;
+        img.alt = `${kg} kg bale`;
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+
+        const b = document.createElement('b');
+        b.textContent = item.title;
+
+        const s = document.createElement('small');
+        s.textContent = item.subtitle;
+
+        meta.appendChild(b);
+        meta.appendChild(s);
+
+        const qtyTag = document.createElement('div');
+        qtyTag.className = 'qtyTag';
+        qtyTag.textContent = `x${item.qty}`;
+
+        row.appendChild(img);
+        row.appendChild(meta);
+        row.appendChild(qtyTag);
+        cartList.appendChild(row);
+      }
+
+      cartSummary.textContent = `${totalBags} bag(s) • ${totalKg} kg total`;
+    }
+
+    // ✅ Fly to cart animation
+    function flyToCart(fromImgEl){
+      const btn = btnCheckout;
+      const r1 = fromImgEl.getBoundingClientRect();
+      const r2 = btn.getBoundingClientRect();
+
+      const fly = fromImgEl.cloneNode(true);
+      fly.classList.add('flyImg');
+      fly.style.left = `${r1.left}px`;
+      fly.style.top = `${r1.top}px`;
+      fly.style.width = `${r1.width}px`;
+      fly.style.height = `${r1.height}px`;
+      fly.style.opacity = '1';
+      fly.style.transform = 'translate(0,0) scale(1)';
+
+      document.body.appendChild(fly);
+
+      const dx = (r2.left + r2.width/2) - (r1.left + r1.width/2);
+      const dy = (r2.top + r2.height/2) - (r1.top + r1.height/2);
+
+      requestAnimationFrame(() => {
+        fly.style.transition = 'transform 520ms cubic-bezier(.2,.9,.2,1), opacity 520ms ease';
+        fly.style.transform = `translate(${dx}px, ${dy}px) scale(.2)`;
+        fly.style.opacity = '0.0';
+      });
+
+      fly.addEventListener('transitionend', () => fly.remove(), { once:true });
+    }
+
+    // Tap package -> add to cart (+ fly)
+    document.querySelectorAll('.package').forEach(pkg => {
+      pkg.addEventListener('click', () => {
+        const kg = Number(pkg.dataset.kg);
+        const img = pkg.dataset.img;
+        const title = pkg.querySelector('.pkgMeta b')?.textContent || `${kg} kg bale`;
+        const subtitle = pkg.querySelector('.pkgMeta small')?.textContent || '';
+        const imgEl = pkg.querySelector('img');
+
+        addItem(kg, img, title, subtitle);
+        if(imgEl) flyToCart(imgEl);
+      });
+    });
+
+    // Checkout -> form
+    btnCheckout.addEventListener('click', () => {
+      showView('form');
+      renderCart();
+    });
+
+    // Submit animation
+    const btnInsights = document.getElementById('btnInsights');
+    const inpPhone = document.getElementById('inpPhone');
+
+    const animOverlay = document.getElementById('animOverlay');
+    const car = document.getElementById('car');
+
+    function runAnimation(){
+      animOverlay.classList.add('show');
+      animOverlay.setAttribute('aria-hidden', 'false');
+
+      car.classList.remove('run');
+      void car.offsetWidth;
+      car.classList.add('run');
+
+      const onEnd = () => {
+        car.removeEventListener('animationend', onEnd);
+
+        animOverlay.classList.remove('show');
+        animOverlay.setAttribute('aria-hidden', 'true');
+
+        // clear form + cart
+        inpPhone.value = '';
+        cart.clear();
+        updateCartUI();
+
+        showView('home');
+      };
+
+      car.addEventListener('animationend', onEnd);
+    }
+
+    btnInsights.addEventListener('click', () => {
+      btnInsights.disabled = true;
+
+      setTimeout(() => {
+        runAnimation();
+        btnInsights.disabled = false;
+      }, 150);
+    });
+
+    // Init
+    updateCartUI();
+  </script>
+</body>
+</html>
